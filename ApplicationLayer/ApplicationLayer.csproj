@@ -10,4 +10,9 @@
     <ProjectReference Include="..\InfrastructureLayer\InfrastructureLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\Client\Queries\" />
+    <Folder Include="CQRS\Identity\" />
+  </ItemGroup>
+
 </Project>

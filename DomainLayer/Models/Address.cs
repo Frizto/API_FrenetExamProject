@@ -1,8 +1,8 @@
-﻿namespace InfrastructureLayer.Models;
+﻿namespace DomainLayer.Models;
 
 public partial class Address
 {
-    public int AddressId { get; set; }
+    public int Id { get; set; }
 
     public string? Street { get; set; }
 
@@ -12,5 +12,7 @@ public partial class Address
 
     public string? ZipCode { get; set; }
 
-    public virtual ICollection<Client> Clients { get; set; } = new List<Client>();
+    public int? ClientId { get; set; }
+
+    public virtual Client? Client { get; set; }
 }

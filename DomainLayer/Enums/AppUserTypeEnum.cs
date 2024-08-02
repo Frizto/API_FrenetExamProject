@@ -2,6 +2,6 @@
 public enum AppUserTypeEnum
 {
     Admin = 0,
-    User = 1,
+    Client = 1,
     Guest = 2
 }

@@ -1,5 +1,10 @@
-﻿using DomainLayer.Enums;
+﻿using ApplicationLayer.CQRS.Interfaces;
+using ApplicationLayer.CQRS.User.Commands;
+using ApplicationLayer.DTOs;
+using ApplicationLayer.Extensions;
+using DomainLayer.Enums;
 using InfrastructureLayer.DataAccess;
+using InfrastructureLayer.Handlers.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +51,10 @@ public static class ServiceContainer
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration[nameof(JwtTokenConfigEnum.JwtFEKey)]!))
             };
         });
+
+        // 2. Adds the CQRS services to the container
+        services.AddScoped<ICommandHandler<CreateUserCommand, ServiceResponse>, CreateUserHandler>();
+
 
         return services;
     }

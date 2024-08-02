@@ -1,4 +1,6 @@
-﻿namespace DomainLayer.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DomainLayer.Models;
 
 public partial class Client
 {
@@ -9,6 +11,7 @@ public partial class Client
     public string? Phone { get; set; }
 
     public string? Email { get; set; }
-
+    // Navigation Properties
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
+    public string? AspNetUserId { get; set; }
 }

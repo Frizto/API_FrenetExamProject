@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace InfrastructureLayer.DataAccess;
+namespace ApplicationLayer.Extensions;
 public class AppUser : IdentityUser
 {
     // Base Properties

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
 using System.Text;
 
 namespace InfrastructureLayer.DependencyInjection;
@@ -17,9 +18,11 @@ public static class ServiceContainer
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // 0. Adds the DbContext to the services container
+        // 1. Adds the DbContexts to the services container
         services.AddDbContext<AppDbContext>(ServiceLifetime.Scoped);
+        services.AddDbContext<LogsDbContext>(ServiceLifetime.Scoped);
 
+        // 2. Adds the Identity services to the services container
         services.AddIdentity<AppUser, IdentityRole>(options =>
         {
             // Lockout settings
@@ -32,7 +35,7 @@ public static class ServiceContainer
             .AddSignInManager()
             .AddRoles<IdentityRole>();
 
-        // 1. Adds authentication structure using JWT Json Web Token
+        // 3. Adds authentication structure using JWT Json Web Token
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -52,9 +55,8 @@ public static class ServiceContainer
             };
         });
 
-        // 2. Adds the CQRS services to the container
+        // 4. Adds the CQRS services to the container
         services.AddScoped<ICommandHandler<CreateUserCommand, ServiceResponse>, CreateUserHandler>();
-
 
         return services;
     }

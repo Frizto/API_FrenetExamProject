@@ -30,8 +30,6 @@ public class UserController(ILogger<UserController> logger) : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await handler.Handle(command, cancellationToken);
-        logger.LogInformation("User created successfully");
-        logger.LogDebug("User created successfully");
         return Ok(result);
     }
 

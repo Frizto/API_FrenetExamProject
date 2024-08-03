@@ -1,33 +1,28 @@
 ﻿using ApplicationLayer.CQRS.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using ApplicationLayer.Extensions;
 using ApplicationLayer.CQRS.User.Commands;
 using ApplicationLayer.DTOs;
-using InfrastructureLayer.DataAccess;
+using ApplicationLayer.Extensions;
 using DomainLayer.Enums;
 using DomainLayer.Models;
-using Microsoft.Extensions.Logging;
+using InfrastructureLayer.DataAccess;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NLog;
-using System.Diagnostics;
+using System.Security.Claims;
 
 namespace InfrastructureLayer.Handlers.User;
 sealed class CreateUserHandler(UserManager<AppUser> userManager,
-    AppDbContext appDbContext,
-    IHttpContextAccessor httpContextAccessor) : ICommandHandler<CreateUserCommand, ServiceResponse>
+    AppDbContext appDbContext) : ICommandHandler<CreateUserCommand, ServiceResponse>
 {
-    // 0.a Create logger instances
-    private static readonly Logger CreateLogger = LogManager.GetLogger("CreateLogger");
-    private static readonly Logger ErrorLogger = LogManager.GetLogger("ErrorLogger");
+    // 0a. Create logger instances
+    private static readonly Logger CreateLogger = LogManager.GetLogger("dbCreate");
+    private static readonly Logger ErrorLogger = LogManager.GetLogger("localError");
 
-    // 0.b Generate a unique transaction ID using a GUID
-    string transactionId = Guid.NewGuid().ToString();
+    // 0b. Generate a unique transaction ID using a GUID
+    readonly string transactionId = Guid.NewGuid().ToString();
 
     public async Task<ServiceResponse> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
-        using (ScopeContext.PushProperty("TransactionId", transactionId));
         using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
         try
         {
@@ -38,24 +33,22 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
                 PasswordHash = command.Password,
                 Name = command.Name,
                 Email = command.Email,
-                NormalizedEmail = command.Email.ToUpper(),
+                NormalizedEmail = command.Email!.ToUpper(),
                 UserType = command.UserRole.ToString()
             };
 
-            var createAspUserResult = await userManager.CreateAsync(aspUser, command.Password);
+            var createAspUserResult = await userManager.CreateAsync(aspUser, command.Password!);
             if (!createAspUserResult.Succeeded)
             {
-                transaction.Rollback();
-                return new ServiceResponse(false, "Failed when creating the Asp User", DateTime.UtcNow);
+                throw new Exception("Failed when creating the Asp User");
             }
 
-            // 1. Create its claims.
+            // 1a. Create its claims.
             var claims = CreateClaims(command);
             var claimsResult = await userManager.AddClaimsAsync(aspUser, claims);
             if (!claimsResult.Succeeded)
             {
-                transaction.Rollback();
-                return new ServiceResponse(false, "Failed when creating the User Claims", DateTime.UtcNow);
+                throw new Exception("Failed when creating the User Claims");
             }
 
             // 2. Create the client for the Db user.
@@ -70,35 +63,37 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
             var dbUserResult = await appDbContext.Clients.AddAsync(dbUser, cancellationToken);
             if (dbUserResult.State != EntityState.Added)
             {
-                transaction.Rollback();
-                return new ServiceResponse(false, "Failed when creating the Db User", DateTime.UtcNow);
+                throw new Exception("Failed when creating the Db User");
             }
-
             
-            // 3. Save the changes.
+            // 3a. Save the changes.
             var resultDb = await appDbContext.SaveChangesAsync(cancellationToken);
             if (resultDb == 0)
             {
-                transaction.Rollback();
-                return new ServiceResponse(false, "Failed when saving user creation to Db", DateTime.UtcNow);
-            } 
+                throw new Exception("Failed when saving user creation to Db");
+            }
+
+            // 3b. If all operations succeed, commit the transaction.
+            transaction.Commit();
             
             // 4. Create the Log.
-            CreateLogger.Info("User Created Successfully");
+            using (ScopeContext.PushProperty("TransactionId", transactionId))
+            {
+                CreateLogger.Info("User Created Successfully");
+            }
 
-            // If all operations succeed, commit the transaction.
-            transaction.Commit();
             return new ServiceResponse(true, "User Created Successfully", DateTime.UtcNow);
         }
         catch (Exception ex)
         {
             // If an unexpected error occurs, roll back the transaction.
             transaction.Rollback();
-            Trace.WriteLine(ex.Message);
-            return new ServiceResponse(false, "Error when creating the User", DateTime.UtcNow);
+            ErrorLogger.Error(ex, ex.Message);
+            return new ServiceResponse(false, ex.Message, DateTime.UtcNow);
         }
     }
 
+    // 1b. Create the claims based on the user role.
     private static Claim[] CreateClaims(CreateUserCommand command)
     {
         Claim[] claims = [];
@@ -107,7 +102,7 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
         {
             claims =
             [
-                new Claim("Name", command.Name),
+                new Claim("Name", command.Name!),
                 new Claim(ClaimTypes.Email, command.Email),
                 new Claim(ClaimTypes.Role, nameof(AppUserTypeEnum.Admin)),
             ];
@@ -116,8 +111,8 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
         {
             claims =
             [
-                new Claim("Name", command.Name),
-                new Claim(ClaimTypes.Email, command.Email),
+                new Claim("Name", command.Name!),
+                new Claim(ClaimTypes.Email, command.Email!),
                 new Claim(ClaimTypes.Role, nameof(AppUserTypeEnum.Client)),
             ];
         }

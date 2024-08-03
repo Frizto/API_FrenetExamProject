@@ -18,7 +18,8 @@ BEGIN
     [Message] = @message,
     [Logger] = @logger,
     [Properties] = @properties,
-    [Exception] = @exception
+    [Exception] = @exception,
+	[TransactionId] = @transactionId
   WHERE [ID] = @id;
 
   INSERT INTO [dbo].[NLog_Update] (

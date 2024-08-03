@@ -1,6 +1,5 @@
 CREATE PROCEDURE [dbo].[NLog_DeleteEntry_p] (
-  @id int,
-  @transactionId nvarchar(50)
+  @id int
 ) AS
 BEGIN
   DECLARE @machineName nvarchar(200);
@@ -19,7 +18,8 @@ BEGIN
     @message = [Message],
     @logger = [Logger],
     @properties = [Properties],
-    @exception = [Exception]
+    @exception = [Exception],
+	@transactionId = [TransactionId]
   FROM [dbo].[NLog]
   WHERE [ID] = @id;
 

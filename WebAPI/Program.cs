@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 
-var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
 
 try
@@ -12,6 +12,9 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     // Add services to the container.
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
+
     builder.Services.AddInfrastructure(builder.Configuration);
 
     builder.Services.AddControllers();
@@ -34,7 +37,7 @@ try
         });
 
         options.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
+    {
             {
                 new OpenApiSecurityScheme
                 {
@@ -45,12 +48,8 @@ try
                     }
                 }, Array.Empty<string>()
             }
-        });
     });
-
-    // Setup NLog
-    builder.Logging.ClearProviders();
-    builder.Host.UseNLog();
+    });
 
     var app = builder.Build();
 
@@ -70,10 +69,10 @@ try
 
     app.Run();
 }
-catch (Exception exception)
+catch (Exception ex)
 {
-    // NLog: catch setup errors
-    logger.Error(exception, "Stopped program because of exception");
+    // catch setup errors
+    logger.Error(ex, "Stopped program because of exception");
     throw;
 }
 finally
@@ -81,3 +80,6 @@ finally
     // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
     NLog.LogManager.Shutdown();
 }
+
+
+

@@ -54,6 +54,10 @@ public class UserController(ILogger<UserController> logger) : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Gets all clients or a specific one if Id is provided.
+    /// </summary>
+    /// <returns>All or one user.</returns>
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("readall")]
     public async Task<IActionResult> ReadAllUsersAsync(

@@ -12,7 +12,6 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : Iden
 
     public virtual DbSet<Client> Clients { get; set; }
 
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string connectionString = Environment.GetEnvironmentVariable("ASPNETCORE_FRENETEXAM_DEV");

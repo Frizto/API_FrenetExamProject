@@ -1,0 +1,4 @@
+DELETE FROM NLog;
+DELETE FROM NLog_Create;
+DELETE FROM NLog_Update;
+DELETE FROM NLog_Delete;

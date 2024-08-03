@@ -1,6 +1,8 @@
 ﻿using ApplicationLayer.CQRS.Interfaces;
 using ApplicationLayer.CQRS.User.Commands;
+using ApplicationLayer.CQRS.User.Queries;
 using ApplicationLayer.DTOs;
+using ApplicationLayer.DTOs.User;
 using ApplicationLayer.Extensions;
 using DomainLayer.Enums;
 using InfrastructureLayer.DataAccess;
@@ -57,6 +59,9 @@ public static class ServiceContainer
 
         // 4. Adds the CQRS services to the container
         services.AddScoped<ICommandHandler<CreateUserCommand, ServiceResponse>, CreateUserHandler>();
+        services.AddScoped<ICommandHandler<UpdateUserCommand, ServiceResponse>, UpdateUserHandler>();
+        services.AddScoped<ICommandHandler<DeleteUserCommand, ServiceResponse>, DeleteUserHandler>();
+        services.AddScoped<IQueryHandler<ReadUserQuery, ReadUserDTO>, ReadUserHandler>();
 
         return services;
     }

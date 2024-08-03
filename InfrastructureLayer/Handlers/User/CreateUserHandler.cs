@@ -14,19 +14,16 @@ namespace InfrastructureLayer.Handlers.User;
 sealed class CreateUserHandler(UserManager<AppUser> userManager,
     AppDbContext appDbContext) : ICommandHandler<CreateUserCommand, ServiceResponse>
 {
-    // 0a. Create logger instances
-    private static readonly Logger CreateLogger = LogManager.GetLogger("dbCreate");
-    private static readonly Logger ErrorLogger = LogManager.GetLogger("localError");
-
-    // 0b. Generate a unique transaction ID using a GUID
-    readonly string transactionId = Guid.NewGuid().ToString();
+    // 0. Create logger instances
+    private static readonly Logger CreateLogger = LogManager.GetLogger("CreateLogger");
+    private static readonly Logger ErrorLogger = LogManager.GetLogger("ErrorLogger");
 
     public async Task<ServiceResponse> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
         using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            // 0. Create the AspNetUser for credentials.
+            // 1. Create the AspNetUser for credentials.
             var aspUser = new AppUser
             {
                 UserName = command.Email,
@@ -52,20 +49,27 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
             }
 
             // 2. Create the client for the Db user.
-            var dbUser = new Client
+            var clientAddress = new Address
             {
-                Name = command.Name,
-                Email = command.Email,
-                Phone = command.Phone,
-                AspNetUserId = aspUser.Id
+                Street = command.Address!.Street,
+                City = command.Address!.City,
+                State = command.Address!.State,
+                ZipCode = command.Address!.ZipCode,
+                Client = new Client
+                {
+                    Name = command.Name,
+                    Email = command.Email,
+                    Phone = command.Phone,
+                    AspNetUserId = aspUser.Id
+                }
             };
 
-            var dbUserResult = await appDbContext.Clients.AddAsync(dbUser, cancellationToken);
-            if (dbUserResult.State != EntityState.Added)
+            var addressResult = await appDbContext.Addresses.AddAsync(clientAddress, cancellationToken);
+            if (addressResult.State != EntityState.Added)
             {
-                throw new Exception("Failed when creating the Db User");
+                throw new Exception("Failed when creating the Client");
             }
-            
+
             // 3a. Save the changes.
             var resultDb = await appDbContext.SaveChangesAsync(cancellationToken);
             if (resultDb == 0)
@@ -75,10 +79,11 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
 
             // 3b. If all operations succeed, commit the transaction.
             transaction.Commit();
-            
+
             // 4. Create the Log.
-            using (ScopeContext.PushProperty("TransactionId", transactionId))
+            using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
             {
+                ScopeContext.PushProperty("EntityId", aspUser.Id);
                 CreateLogger.Info("User Created Successfully");
             }
 

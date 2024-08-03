@@ -1,0 +1,3 @@
+DELETE FROM AspNetUsers;
+DELETE FROM AspNetUserClaims;
+DELETE FROM Clients;

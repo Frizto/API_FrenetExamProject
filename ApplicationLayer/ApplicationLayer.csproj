@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Client\Queries\" />
-    <Folder Include="CQRS\User\Queries\" />
+    <Folder Include="CQRS\Address\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

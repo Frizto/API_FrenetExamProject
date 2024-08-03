@@ -1,0 +1,2 @@
+$env:ConnectionString = [System.Environment]::GetEnvironmentVariable("ASPNETCORE_FRENETEXAM_DEV")
+Scaffold-DbContext $env:ConnectionString Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -ContextDir DataAccess -Context AppDbContext -Force

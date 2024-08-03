@@ -1,2 +1,2 @@
 ﻿namespace ApplicationLayer.DTOs.Client;
-public record TokenResponse(string? Token) : ServiceResponse(true, null);
+public record TokenResponse(string? Token) : ServiceResponse(true, string.Empty, DateTime.UtcNow);

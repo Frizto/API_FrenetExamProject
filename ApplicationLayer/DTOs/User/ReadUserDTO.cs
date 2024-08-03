@@ -2,7 +2,10 @@
 
 namespace ApplicationLayer.DTOs.User;
 public record  ReadUserDTO(
+    bool Flag,
     string? Id, 
     string? Name, 
     string? Email, 
-    string? Phone) : ServiceResponse(true, string.Empty, DateTime.UtcNow);
+    string? Phone,
+    string? Message,
+    DateTime DateTime);

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>FreNet Exam WebAPI</name>
+  </assembly>
+  <members>
+    <!-- Documentation for the UserController class -->
+    <member name="T:WebAPI.Controllers.UserController">
+      <summary>
+        Represents a controller for managing users, clients and admins.
+      </summary>
+    </member>
+
+    <!-- Documentation for the GetItems method -->
+    <member name="M:YourNamespace.ItemsController.GetItems">
+      <summary>
+        Gets all items.
+      </summary>
+      <returns>A list of items.</returns>
+    </member>
+
+    <!-- Documentation for the GetItem method -->
+    <member name="M:YourNamespace.ItemsController.GetItem(System.Int32)">
+      <summary>
+        Gets an item by ID.
+      </summary>
+      <param name="id">The ID of the item.</param>
+      <returns>The item with the specified ID.</returns>
+    </member>
+
+    <!-- Documentation for the CreateItem method -->
+    <member name="M:YourNamespace.ItemsController.CreateItem(YourNamespace.Item)">
+      <summary>
+        Creates a new item.
+      </summary>
+      <param name="item">The item to create.</param>
+      <returns>The created item.</returns>
+    </member>
+
+    <!-- Documentation for the UpdateItem method -->
+    <member name="M:YourNamespace.ItemsController.UpdateItem(System.Int32,YourNamespace.Item)">
+      <summary>
+        Updates an existing item.
+      </summary>
+      <param name="id">The ID of the item to update.</param>
+      <param name="item">The updated item.</param>
+      <returns>No content.</returns>
+    </member>
+
+    <!-- Documentation for the DeleteItem method -->
+    <member name="M:YourNamespace.ItemsController.DeleteItem(System.Int32)">
+      <summary>
+        Deletes an item by ID.
+      </summary>
+      <param name="id">The ID of the item to delete.</param>
+      <returns>No content.</returns>
+    </member>
+  </members>
+</doc>

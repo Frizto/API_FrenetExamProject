@@ -5,8 +5,15 @@ using ApplicationLayer.DTOs;
 using ApplicationLayer.DTOs.Shipment;
 using ApplicationLayer.DTOs.User;
 using DomainLayer.Enums;
+using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static System.Net.WebRequestMethods;
 
 namespace WebAPI.Controllers;
 
@@ -15,7 +22,7 @@ namespace WebAPI.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class ShipmentController : ControllerBase
+public class ShipmentController(HttpClient httpClient) : ControllerBase
 {
     /// <summary>
     /// Create a new Shipment Order.
@@ -74,6 +81,20 @@ public class ShipmentController : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await handler.HandleListAsync(query, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Gets the prices for a Shipment Order.
+    /// </summary>
+    /// <returns>The prices and delivery companies.</returns>
+    [HttpPost("shipment-price")]
+    public async Task<IActionResult> ShipmentPrice(
+        [FromServices] IQueryHandler<ShipmentPricingQuery, ShipmentPricingDTO> handler,
+        [FromBody] ShipmentPricingQuery command,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.HandleListAsync(command, cancellationToken);
         return Ok(result);
     }
 }

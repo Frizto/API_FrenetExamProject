@@ -84,7 +84,8 @@ public static class ServiceContainer
         services.AddScoped<ICommandHandler<UpdateShipmentCommand, ServiceResponse>, UpdateShipmentHandler>();
         services.AddScoped<ICommandHandler<DeleteShipmentCommand, ServiceResponse>, DeleteShipmentHandler>();
         services.AddScoped<IQueryHandler<ReadShipmentQuery, ReadShipmentDTO>, ReadShipmentHandler>();
-
+        services.AddScoped<IQueryHandler<ShipmentPricingQuery, ShipmentPricingDTO>, ShipmentPricingHandler>();
+        
         return services;
     }
 }

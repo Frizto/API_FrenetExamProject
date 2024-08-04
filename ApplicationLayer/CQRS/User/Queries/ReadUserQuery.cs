@@ -1,2 +1,5 @@
 ﻿namespace ApplicationLayer.CQRS.User.Queries;
-public record ReadUserQuery(string? Id);
+public class ReadUserQuery
+{
+    public string? Id { get; set; }
+}

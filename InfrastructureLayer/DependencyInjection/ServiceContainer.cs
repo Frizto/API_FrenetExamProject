@@ -62,6 +62,7 @@ public static class ServiceContainer
         services.AddScoped<ICommandHandler<UpdateUserCommand, ServiceResponse>, UpdateUserHandler>();
         services.AddScoped<ICommandHandler<DeleteUserCommand, ServiceResponse>, DeleteUserHandler>();
         services.AddScoped<IQueryHandler<ReadUserQuery, ReadUserDTO>, ReadUserHandler>();
+        services.AddScoped<ICommandHandler<LoginUserCommand, ServiceResponse>, LoginUserHandler>();
 
         return services;
     }

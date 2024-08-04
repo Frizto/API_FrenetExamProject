@@ -7,14 +7,13 @@ using Microsoft.EntityFrameworkCore;
 namespace InfrastructureLayer.Handlers.User;
 sealed class ReadUserHandler(AppDbContext appDbContext) : IQueryHandler<ReadUserQuery, ReadUserDTO>
 {
-    private readonly ReadUserDTO Dummy = new(false, null, null, null, null, null, DateTime.UtcNow);
     public async Task<ReadUserDTO> Handle(ReadUserQuery query, CancellationToken cancellationToken)
     {
 
         var dbUser = await appDbContext.Clients
             .Where(u => u.Id == Int32.Parse(query.Id!))
-            .Select(u => new ReadUserDTO(true, u.Id.ToString(), u.Name, u.Email, u.Phone, "User Found!", DateTime.UtcNow))
-            .FirstOrDefaultAsync(cancellationToken) ?? Dummy;
+            .Select(u => new ReadUserDTO(true, u.Id.ToString(), u.Name, u.Email, u.Phone, "User Found!"))
+            .FirstOrDefaultAsync(cancellationToken) ?? new ReadUserDTO(false);
         return dbUser;
     }
 
@@ -29,12 +28,12 @@ sealed class ReadUserHandler(AppDbContext appDbContext) : IQueryHandler<ReadUser
         }
 
         users = await appDbContext.Clients
-                    .Select(u => new ReadUserDTO(true, u.Id.ToString(), u.Name, u.Email, u.Phone, "User Found!", DateTime.UtcNow))
+                    .Select(u => new ReadUserDTO(true, u.Id.ToString(), u.Name, u.Email, u.Phone, "User Found!"))
                     .ToListAsync(cancellationToken);
 
         if (users.Count == 0)
         {
-            users.Add(Dummy);
+            users.Add(new ReadUserDTO(false));
         }
 
         return users;

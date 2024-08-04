@@ -11,7 +11,7 @@ sealed class ReadUserHandler(AppDbContext appDbContext) : IQueryHandler<ReadUser
     {
 
         var dbUser = await appDbContext.Clients
-            .Where(u => u.Id == Int32.Parse(query.Id)!)
+            .Where(u => u.Id == Int32.Parse(query.Id!))
             .Select(u => new ReadUserDTO(true, u.Id.ToString(), u.Name, u.Email, u.Phone, "User Found!"))
             .FirstOrDefaultAsync(cancellationToken) ?? new ReadUserDTO(false);
         return dbUser;

@@ -1,11 +1,15 @@
 ﻿using ApplicationLayer.CQRS.Interfaces;
+using ApplicationLayer.CQRS.Shipment.Commands;
+using ApplicationLayer.CQRS.Shipment.Queries;
 using ApplicationLayer.CQRS.User.Commands;
 using ApplicationLayer.CQRS.User.Queries;
 using ApplicationLayer.DTOs;
+using ApplicationLayer.DTOs.Shipment;
 using ApplicationLayer.DTOs.User;
 using ApplicationLayer.Extensions;
 using DomainLayer.Enums;
 using InfrastructureLayer.DataAccess;
+using InfrastructureLayer.Handlers.Shipment;
 using InfrastructureLayer.Handlers.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -57,14 +61,7 @@ public static class ServiceContainer
             };
         });
 
-        // 4. Adds the CQRS services to the container
-        services.AddScoped<ICommandHandler<CreateUserCommand, ServiceResponse>, CreateUserHandler>();
-        services.AddScoped<ICommandHandler<UpdateUserCommand, ServiceResponse>, UpdateUserHandler>();
-        services.AddScoped<ICommandHandler<DeleteUserCommand, ServiceResponse>, DeleteUserHandler>();
-        services.AddScoped<IQueryHandler<ReadUserQuery, ReadUserDTO>, ReadUserHandler>();
-        services.AddScoped<ICommandHandler<LoginUserCommand, ServiceResponse>, LoginUserHandler>();
-
-        // 5. Adds authorization policies for admin and user roles
+        // 4. Adds authorization policies for admin and user roles
         services.AddAuthorizationBuilder()
             .AddPolicy("AdminOnly", policy =>
             {
@@ -73,6 +70,20 @@ public static class ServiceContainer
             {
                 policy.RequireRole("Client");
             });
+
+        // 5. Adds the CQRS services to the container
+        // 5a. User Handlers
+        services.AddScoped<ICommandHandler<CreateUserCommand, ServiceResponse>, CreateUserHandler>();
+        services.AddScoped<ICommandHandler<UpdateUserCommand, ServiceResponse>, UpdateUserHandler>();
+        services.AddScoped<ICommandHandler<DeleteUserCommand, ServiceResponse>, DeleteUserHandler>();
+        services.AddScoped<IQueryHandler<ReadUserQuery, ReadUserDTO>, ReadUserHandler>();
+        services.AddScoped<ICommandHandler<LoginUserCommand, ServiceResponse>, LoginUserHandler>();
+        services.AddScoped<IQueryHandler<RefreshUserTokenQuery, TokenResultDTO>, RefreshUserTokenHandler>();
+        // 5b. Shipment Handlers
+        services.AddScoped<ICommandHandler<CreateShipmentCommand, ServiceResponse>, CreateShipmentHandler>();
+        services.AddScoped<ICommandHandler<UpdateShipmentCommand, ServiceResponse>, UpdateShipmentHandler>();
+        services.AddScoped<ICommandHandler<DeleteShipmentCommand, ServiceResponse>, DeleteShipmentHandler>();
+        services.AddScoped<IQueryHandler<ReadShipmentQuery, ReadShipmentDTO>, ReadShipmentHandler>();
 
         return services;
     }

@@ -1,4 +1,7 @@
-﻿namespace DomainLayer.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace DomainLayer.Models;
 
 public partial class Address
 {

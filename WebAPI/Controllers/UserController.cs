@@ -19,7 +19,6 @@ public class UserController : ControllerBase
     /// <summary>
     /// Logs in an user and generate a valid a JWT Token from service.
     /// </summary>
-    /// <param name="command">The Login command of the user.</param>
     /// <returns>A logged user and a JWT Token for Authorization.</returns>
     [HttpPost("login-user")]
     public async Task<IActionResult> LoginUserAsync(
@@ -34,7 +33,6 @@ public class UserController : ControllerBase
     /// <summary>
     /// Create a new User.
     /// </summary>
-    /// <param name="command">The Create command of the user.</param>
     /// <returns>A new User based on the specified role.</returns>
     [HttpPost("create-user")]
     public async Task<IActionResult> CreateUserAsync(
@@ -49,7 +47,6 @@ public class UserController : ControllerBase
     /// <summary>
     /// Update an existing User with a valid {int} Id.
     /// </summary>
-    /// <param name="command">The Update command of the user.</param>
     /// <returns>Update the User's basic information.</returns>
     [HttpPut("update-user")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
@@ -65,7 +62,6 @@ public class UserController : ControllerBase
     /// <summary>
     /// Delete a User with an valid {int} Id.
     /// </summary>
-    /// <param name="command">The Delete command of the user.</param>
     /// <returns>Delete the User based on a given Id.</returns>
     [HttpDelete("delete-user")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
@@ -81,7 +77,6 @@ public class UserController : ControllerBase
     /// <summary>
     /// Gets all clients or a specific one if {int} Id is provided.
     /// </summary>
-    /// <param name="query">The Read query for the users.</param>
     /// <returns>All or one user.</returns>
     [HttpGet("readall")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
@@ -97,7 +92,6 @@ public class UserController : ControllerBase
     /// <summary>
     /// Refreshes the current User Token.
     /// </summary>
-    /// <param name="query">The Refresh Toke Query of the user.</param>
     /// <returns>A valid new JWT Token.</returns>
     [HttpPost("refresh-token")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]

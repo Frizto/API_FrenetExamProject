@@ -53,7 +53,7 @@ public static class ServiceContainer
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = configuration[nameof(JwtTokenConfigEnum.JwtFEIssuer)],
                 ValidAudience = configuration[nameof(JwtTokenConfigEnum.JwtFEAudience)],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration[nameof(JwtTokenConfigEnum.JwtFEKey)]!))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration[nameof(JwtTokenConfigEnum.JwtFEKey)])!)
             };
         });
 
@@ -63,6 +63,16 @@ public static class ServiceContainer
         services.AddScoped<ICommandHandler<DeleteUserCommand, ServiceResponse>, DeleteUserHandler>();
         services.AddScoped<IQueryHandler<ReadUserQuery, ReadUserDTO>, ReadUserHandler>();
         services.AddScoped<ICommandHandler<LoginUserCommand, ServiceResponse>, LoginUserHandler>();
+
+        // 5. Adds authorization policies for admin and user roles
+        services.AddAuthorizationBuilder()
+            .AddPolicy("AdminOnly", policy =>
+            {
+                policy.RequireRole("Admin");
+            }).AddPolicy("ClientOnly", policy =>
+            {
+                policy.RequireRole("Client");
+            });
 
         return services;
     }

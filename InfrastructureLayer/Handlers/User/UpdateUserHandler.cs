@@ -23,8 +23,11 @@ sealed class UpdateUserHandler(UserManager<AppUser> userManager,
         try
         {
             // 0. Find the AspNetUser
+            var dbUser = await appDbContext.Clients
+                .FirstOrDefaultAsync(u => u.Id == command.Id, cancellationToken)
+                ?? throw new Exception("User not found");
             var aspUser = await userManager
-                .FindByIdAsync(command.Id!)
+                .FindByIdAsync(dbUser.AspNetUserId!)
                 ?? throw new Exception("User not found");
 
             // 1. Update the AspNetUser properties
@@ -57,7 +60,7 @@ sealed class UpdateUserHandler(UserManager<AppUser> userManager,
 
             // 3. Update the client
             var client = await appDbContext.Clients
-                .FirstOrDefaultAsync(c => c.AspNetUserId == command.Id, cancellationToken) 
+                .FirstOrDefaultAsync(c => c.AspNetUserId == aspUser.Id, cancellationToken) 
                 ?? throw new Exception("Client not found");
             client.Name = command.Name;
             client.Email = command.Email;

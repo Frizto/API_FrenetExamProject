@@ -3,6 +3,8 @@ using ApplicationLayer.CQRS.User.Commands;
 using ApplicationLayer.CQRS.User.Queries;
 using ApplicationLayer.DTOs;
 using ApplicationLayer.DTOs.User;
+using DomainLayer.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -15,11 +17,11 @@ namespace WebAPI.Controllers;
 public class UserController : ControllerBase
 {
     /// <summary>
-    /// Logs in a user and generate a valid a JWT Token from service.
+    /// Logs in an user and generate a valid a JWT Token from service.
     /// </summary>
     /// <param name="command">The Login command of the user.</param>
     /// <returns>A logged user and a JWT Token for Authorization.</returns>
-    [HttpPost("login")]
+    [HttpPost("login-user")]
     public async Task<IActionResult> LoginUserAsync(
         [FromServices] ICommandHandler<LoginUserCommand, ServiceResponse> handler,
         [FromBody] LoginUserCommand command,
@@ -34,8 +36,7 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="command">The Create command of the user.</param>
     /// <returns>A new User based on the specified role.</returns>
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = nameof(AppPoliciesEnum.SystemLevelPolicy))]
-    [HttpPost("create")]
+    [HttpPost("create-user")]
     public async Task<IActionResult> CreateUserAsync(
         [FromServices] ICommandHandler<CreateUserCommand, ServiceResponse> handler,
         [FromBody] CreateUserCommand command,
@@ -46,12 +47,12 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    /// Update an existing User.
+    /// Update an existing User with a valid {int} Id.
     /// </summary>
     /// <param name="command">The Update command of the user.</param>
     /// <returns>Update the User's basic information.</returns>
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpPut("update")]
+    [HttpPut("update-user")]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
     public async Task<IActionResult> UpdateUserAsync(
         [FromServices] ICommandHandler<UpdateUserCommand, ServiceResponse> handler,
         [FromBody] UpdateUserCommand command,
@@ -62,12 +63,12 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a User with an valid Id.
+    /// Delete a User with an valid {int} Id.
     /// </summary>
     /// <param name="command">The Delete command of the user.</param>
     /// <returns>Delete the User based on a given Id.</returns>
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpDelete("delete")]
+    [HttpDelete("delete-user")]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
     public async Task<IActionResult> DeleteUserAsync(
         [FromServices] ICommandHandler<DeleteUserCommand, ServiceResponse> handler,
         [FromBody] DeleteUserCommand command,
@@ -78,12 +79,12 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    /// Gets all clients or a specific one if Id is provided.
+    /// Gets all clients or a specific one if {int} Id is provided.
     /// </summary>
     /// <param name="query">The Read query for the users.</param>
     /// <returns>All or one user.</returns>
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("readall")]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
     public async Task<IActionResult> ReadAllUsersAsync(
         [FromServices] IQueryHandler<ReadUserQuery, ReadUserDTO> handler,
         [FromQuery] ReadUserQuery query,
@@ -99,6 +100,7 @@ public class UserController : ControllerBase
     /// <param name="query">The Refresh Toke Query of the user.</param>
     /// <returns>A valid new JWT Token.</returns>
     [HttpPost("refresh-token")]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
     public async Task<IActionResult> RefreshUserTokenAsync(
         [FromServices] IQueryHandler<RefreshUserTokenQuery, TokenResultDTO> handler,
         [FromBody] RefreshUserTokenQuery query,

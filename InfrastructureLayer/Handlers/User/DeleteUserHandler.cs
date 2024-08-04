@@ -21,11 +21,8 @@ sealed class DeleteUserHandler(UserManager<AppUser> userManager,
         try
         {
             // 1. Find the user by Id.
-            var user = await userManager.FindByIdAsync(command.Id);
-            if (user == null)
-            {
-                throw new Exception("User not found");
-            }
+            var user = await userManager.FindByIdAsync(command.Id) 
+                ?? throw new Exception("User not found");
 
             // 2. Delete the user.
             var deleteResult = await userManager.DeleteAsync(user);

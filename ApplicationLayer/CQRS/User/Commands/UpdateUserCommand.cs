@@ -5,7 +5,7 @@ namespace ApplicationLayer.CQRS.User.Commands;
 public class UpdateUserCommand
 {
     [Required]
-    public string? Id { get; set; }
+    public int Id { get; set; }
     [RegularExpression(@"^[a-zA-Z\s]{8,40}$", ErrorMessage = "Name can only contain letters and spaces.")]
     public string? Name { get; set; }
     [EmailAddress(ErrorMessage = "Email is Required")]

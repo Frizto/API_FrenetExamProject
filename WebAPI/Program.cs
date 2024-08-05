@@ -20,6 +20,9 @@ try
     // Add Layered services to the container.
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddApplication();
+    
+    // Register HttpClient
+    builder.Services.AddHttpClient();
 
     // Add API services to the container.
     builder.Services.AddControllers();

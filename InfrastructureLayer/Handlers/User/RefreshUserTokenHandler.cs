@@ -80,7 +80,7 @@ public class RefreshUserTokenHandler(UserManager<AppUser> userManager,
             var newToken = await tokenGenerator.GenerateJWTTokenAsync(aspUser, aspUserRoleClaim.Value);
 
             // 6. Return the new token
-            return new TokenResultDTO(true, "Token Refreshed");
+            return new TokenResultDTO(true, "Token Refreshed", newToken);
         }
         catch (Exception ex)
         {

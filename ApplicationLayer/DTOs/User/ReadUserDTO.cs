@@ -1,6 +1,4 @@
-﻿using DomainLayer.Enums;
-
-namespace ApplicationLayer.DTOs.User;
+﻿namespace ApplicationLayer.DTOs.User;
 public record  ReadUserDTO(
     bool Flag,
     string? Id = null, 

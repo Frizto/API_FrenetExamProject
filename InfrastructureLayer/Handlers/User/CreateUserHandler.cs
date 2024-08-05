@@ -78,7 +78,7 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
             }
 
             // 3b. If all operations succeed, commit the transaction.
-            transaction.Commit();
+            await transaction.CommitAsync(cancellationToken);
 
             // 4. Create the Log.
             using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))

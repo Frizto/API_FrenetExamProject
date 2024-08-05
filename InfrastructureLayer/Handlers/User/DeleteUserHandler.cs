@@ -46,7 +46,7 @@ sealed class DeleteUserHandler(UserManager<AppUser> userManager,
             }
 
             // 5. If all operations succeed, commit the transaction.
-            transaction.Commit();
+            await transaction.CommitAsync(cancellationToken);
 
             // 6. Create the Log.
             using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))

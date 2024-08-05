@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace xUnitTestLayer.Handlers
 {
-    public class ShipmentPricingHandlerTests
+    public class ShipmentIntegrationTests
     {
         private readonly HttpClient _httpClient;
         private readonly AppDbContext _dbContext;
@@ -19,7 +19,7 @@ namespace xUnitTestLayer.Handlers
         private readonly IQueryHandler<ReadShipmentQuery, ReadShipmentDTO> _shipHandler;
         private readonly IQueryHandler<ShipmentPricingQuery, ShipmentPricingDTO> _pricingHandler;
 
-        public ShipmentPricingHandlerTests()
+        public ShipmentIntegrationTests()
         {
             _httpClient = new HttpClient();
             var _options = new DbContextOptionsBuilder<AppDbContext>()

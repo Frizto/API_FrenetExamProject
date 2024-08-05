@@ -3,11 +3,11 @@ using System.Text;
 
 namespace xUnitTestLayer.Integration
 {
-    public class IntegrationTests
+    public class ApiTests
     {
         private readonly HttpClient _httpClient;
 
-        public IntegrationTests()
+        public ApiTests()
         {
             _httpClient = new HttpClient();
         }

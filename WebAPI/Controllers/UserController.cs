@@ -20,7 +20,14 @@ public class UserController : ControllerBase
     /// Logs in an user and generate a valid a JWT Token from service.
     /// </summary>
     /// <returns>A logged user and a JWT Token for Authorization.</returns>
+    /// <example>description</example>
+    /// <remarks>  
+    /// It will log an User in and generate a valid JWT Token for Authorization.
+    /// </remarks> 
+    /// <response code = "200" > OK: Operation Success!</response>
+    /// <response code = "400" > Error: Bad Request!</response>
     [HttpPost("login-user")]
+    [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> LoginUserAsync(
         [FromServices] ICommandHandler<LoginUserCommand, ServiceResponse> handler,
         [FromBody] LoginUserCommand command,
@@ -34,7 +41,11 @@ public class UserController : ControllerBase
     /// Create a new User.
     /// </summary>
     /// <returns>A new User based on the specified role.</returns>
+    /// <example>description</example>
+    /// <response code = "200" > OK: Operation Success!</response>
+    /// <response code = "400" > Error: Bad Request!</response>
     [HttpPost("create-user")]
+    [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> CreateUserAsync(
         [FromServices] ICommandHandler<CreateUserCommand, ServiceResponse> handler,
         [FromBody] CreateUserCommand command,
@@ -48,8 +59,13 @@ public class UserController : ControllerBase
     /// Update an existing User with a valid {int} Id.
     /// </summary>
     /// <returns>Update the User's basic information.</returns>
+    /// <example>description</example>
+    /// <response code = "200" > OK: Operation Success!</response>
+    /// <response code = "400" > Error: Bad Request!</response>
+    /// <response code = "401" > Error: User is not authorized!</response>
     [HttpPut("update-user")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> UpdateUserAsync(
         [FromServices] ICommandHandler<UpdateUserCommand, ServiceResponse> handler,
         [FromBody] UpdateUserCommand command,
@@ -63,8 +79,13 @@ public class UserController : ControllerBase
     /// Delete a User with an valid {int} Id.
     /// </summary>
     /// <returns>Delete the User based on a given Id.</returns>
+    /// <example>description</example>
+    /// <response code = "200" > OK: Operation Success!</response>
+    /// <response code = "400" > Error: Bad Request!</response>
+    /// <response code = "401" > Error: User is not authorized!</response>
     [HttpDelete("delete-user")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> DeleteUserAsync(
         [FromServices] ICommandHandler<DeleteUserCommand, ServiceResponse> handler,
         [FromBody] DeleteUserCommand command,
@@ -78,8 +99,17 @@ public class UserController : ControllerBase
     /// Gets all clients or a specific one if {int} Id is provided.
     /// </summary>
     /// <returns>All or one user.</returns>
+    /// <example>description</example>
+    /// <remarks>  
+    /// If you provide a valid Id it will look in Database for the User 
+    /// otherwise it will return a list with them all.
+    /// </remarks> 
+    /// <response code="200">OK: Operation Success!</response>
+    /// <response code="400">Error: Bad Request!</response>
+    /// <response code="401">Error: User is not authorized!</response>
     [HttpGet("readall")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [ProducesResponseType(typeof(ReadUserDTO), 200)]
     public async Task<IActionResult> ReadAllUsersAsync(
         [FromServices] IQueryHandler<ReadUserQuery, ReadUserDTO> handler,
         [FromQuery] ReadUserQuery query,
@@ -93,8 +123,16 @@ public class UserController : ControllerBase
     /// Refreshes the current User Token.
     /// </summary>
     /// <returns>A valid new JWT Token.</returns>
+    /// <example>description</example>
+    /// <remarks>  
+    /// It will refresh the current User's token, the user must be authenticated.
+    /// </remarks> 
+    /// <response code="200">OK: Operation Success!</response>
+    /// <response code="400">Error: Bad Request!</response>
+    /// <response code="401">Error: User is not authorized!</response>
     [HttpPost("refresh-token")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [ProducesResponseType(typeof(TokenResultDTO), 200)]
     public async Task<IActionResult> RefreshUserTokenAsync(
         [FromServices] IQueryHandler<RefreshUserTokenQuery, TokenResultDTO> handler,
         [FromBody] RefreshUserTokenQuery query,

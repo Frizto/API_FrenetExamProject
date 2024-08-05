@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 
 namespace InfrastructureLayer.Handlers.User;
-public class LoginUserHandler(UserManager<AppUser> userManager,
+public sealed class LoginUserHandler(UserManager<AppUser> userManager,
     SignInManager<AppUser> signInManager,
     IConfiguration configuration) : ICommandHandler<LoginUserCommand, ServiceResponse>
     {

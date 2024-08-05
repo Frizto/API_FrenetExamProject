@@ -3,16 +3,24 @@
 namespace ApplicationLayer.CQRS.Shipment.Queries;
 public class ShipmentPricingQuery
 {
-    [Required]
+    [Display(Name = "A Valid Shipment Guid")]
+    public string? ShipmentId { get; set; }
+
+    [Required, Display(Name = "From Postal Code")]
     public string? FromPostalCode { get; set; }
-    [Required]
+
+    [Required, Display(Name = "To Postal Code")]
     public string? ToPostalCode { get; set; }
-    [Required]
+
+    [Required, Display(Name = "Height (in cm)")]
     public double Height { get; set; }
-    [Required]
+
+    [Required, Display(Name = "Width (in cm)")]
     public double Width { get; set; }
-    [Required]
+
+    [Required, Display(Name = "Length (in cm)")]
     public double Length { get; set; }
-    [Required]
+
+    [Required, Display(Name = "Weight (in kg)")]
     public double Weight { get; set; }
 }

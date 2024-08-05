@@ -13,6 +13,7 @@ using InfrastructureLayer.Handlers.Shipment;
 using InfrastructureLayer.Handlers.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -25,8 +26,21 @@ public static class ServiceContainer
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         // 1. Adds the DbContexts to the services container
-        services.AddDbContext<AppDbContext>(ServiceLifetime.Scoped);
-        services.AddDbContext<LogsDbContext>(ServiceLifetime.Scoped);
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseSqlServer(configuration.
+                GetConnectionString(Environment.
+                GetEnvironmentVariable("ASPNETCORE_FRENETEXAM_DEV")) 
+                ?? throw new InvalidOperationException("DB_CONNECTION_STRING is not set"));
+        }, ServiceLifetime.Scoped);
+
+        services.AddDbContext<LogsDbContext>(options =>
+        {
+            options.UseSqlServer(configuration.
+                GetConnectionString(Environment.
+                GetEnvironmentVariable("ASPNETCORE_FRENETEXAMLOGS_DEV"))
+                ?? throw new InvalidOperationException("DB_CONNECTION_STRING is not set"));
+        }, ServiceLifetime.Scoped);
 
         // 2. Adds the Identity services to the services container
         services.AddIdentity<AppUser, IdentityRole>(options =>

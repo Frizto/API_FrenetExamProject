@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Text;
 
 namespace InfrastructureLayer.Handlers.Shipment;
-sealed class ShipmentPricingHandler(HttpClient httpClient) : IQueryHandler<ShipmentPricingQuery, ShipmentPricingDTO>
+public sealed class ShipmentPricingHandler(HttpClient httpClient) : IQueryHandler<ShipmentPricingQuery, ShipmentPricingDTO>
 {
     public async Task<ShipmentPricingDTO> Handle(ShipmentPricingQuery command, CancellationToken cancellationToken)
     {

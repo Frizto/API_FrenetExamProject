@@ -5,7 +5,7 @@ using InfrastructureLayer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace InfrastructureLayer.Handlers.Shipment;
-sealed class ReadShipmentHandler(AppDbContext appDbContext) : IQueryHandler<ReadShipmentQuery, ReadShipmentDTO>
+public sealed class ReadShipmentHandler(AppDbContext appDbContext) : IQueryHandler<ReadShipmentQuery, ReadShipmentDTO>
 {
     public async Task<ReadShipmentDTO> Handle(ReadShipmentQuery query, CancellationToken cancellationToken)
     {

@@ -9,6 +9,10 @@
       <summary>
         Represents a controller for managing users, clients and admins.
       </summary>
+      <example>
+        <code>
+        </code>
+      </example>
     </member>
 
     <!-- Documentation for the GetItems method -->

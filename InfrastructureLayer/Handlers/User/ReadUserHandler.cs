@@ -5,7 +5,7 @@ using InfrastructureLayer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace InfrastructureLayer.Handlers.User;
-sealed class ReadUserHandler(AppDbContext appDbContext) : IQueryHandler<ReadUserQuery, ReadUserDTO>
+public sealed class ReadUserHandler(AppDbContext appDbContext) : IQueryHandler<ReadUserQuery, ReadUserDTO>
 {
     public async Task<ReadUserDTO> Handle(ReadUserQuery query, CancellationToken cancellationToken)
     {

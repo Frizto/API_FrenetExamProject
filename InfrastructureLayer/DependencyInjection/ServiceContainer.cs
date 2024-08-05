@@ -13,6 +13,7 @@ using InfrastructureLayer.Handlers.Shipment;
 using InfrastructureLayer.Handlers.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -25,8 +26,13 @@ public static class ServiceContainer
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         // 1. Adds the DbContexts to the services container
-        services.AddDbContext<AppDbContext>(ServiceLifetime.Scoped);
-        services.AddDbContext<LogsDbContext>(ServiceLifetime.Scoped);
+        var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_FRENETEXAM_DEV");
+        var logsConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_FRENETEXAM_DEV");
+
+        services.AddDbContext<AppDbContext>(options => 
+        options.UseSqlServer(dbConnectionString), ServiceLifetime.Scoped);
+        services.AddDbContext<LogsDbContext>(options => 
+        options.UseSqlServer(logsConnectionString), ServiceLifetime.Scoped);
 
         // 2. Adds the Identity services to the services container
         services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -85,7 +91,7 @@ public static class ServiceContainer
         services.AddScoped<ICommandHandler<DeleteShipmentCommand, ServiceResponse>, DeleteShipmentHandler>();
         services.AddScoped<IQueryHandler<ReadShipmentQuery, ReadShipmentDTO>, ReadShipmentHandler>();
         services.AddScoped<IQueryHandler<ShipmentPricingQuery, ShipmentPricingDTO>, ShipmentPricingHandler>();
-        
+
         return services;
     }
 }

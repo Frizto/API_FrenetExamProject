@@ -2,14 +2,12 @@ using ApplicationLayer.CQRS.Interfaces;
 using ApplicationLayer.CQRS.Shipment.Commands;
 using ApplicationLayer.DTOs;
 using InfrastructureLayer.DataAccess;
+using InfrastructureLayer.Loggers;
 using NLog;
 
 namespace InfrastructureLayer.Handlers.Shipment;
-sealed class UpdateShipmentHandler(AppDbContext appDbContext) : ICommandHandler<UpdateShipmentCommand, ServiceResponse>
+public sealed class UpdateShipmentHandler(AppDbContext appDbContext) : ICommandHandler<UpdateShipmentCommand, ServiceResponse>
 {
-    private static readonly Logger UpdateLogger = LogManager.GetLogger("UpdateLogger");
-    private static readonly Logger ErrorLogger = LogManager.GetLogger("ErrorLogger");
-
     public async Task<ServiceResponse> Handle(UpdateShipmentCommand command, CancellationToken cancellationToken)
     {
         using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
@@ -42,10 +40,13 @@ sealed class UpdateShipmentHandler(AppDbContext appDbContext) : ICommandHandler<
             await transaction.CommitAsync(cancellationToken);
 
             // 4. Create the log
-            using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
             {
-                ScopeContext.PushProperty("EntityId", shipmentData.Id);
-                UpdateLogger.Info("Shipment Updated Successfully");
+                using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+                {
+                    ScopeContext.PushProperty("EntityId", shipmentData.Id);
+                    CustomLoggers.UpdateLogger.Info("Shipment Updated Successfully");
+                }
             }
 
             return new ServiceResponse(true, "Shipment Updated Successfully", DateTime.UtcNow);
@@ -54,7 +55,10 @@ sealed class UpdateShipmentHandler(AppDbContext appDbContext) : ICommandHandler<
         {
             // If an unexpected error occurs, roll back the transaction
             transaction.Rollback();
-            ErrorLogger.Error(ex, ex.Message);
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                CustomLoggers.ErrorLogger.Error(ex, ex.Message);
+            }
             return new ServiceResponse(false, ex.Message, DateTime.UtcNow);
         }
     }

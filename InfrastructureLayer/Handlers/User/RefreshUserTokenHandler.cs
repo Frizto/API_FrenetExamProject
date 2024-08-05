@@ -4,6 +4,7 @@ using ApplicationLayer.DTOs.User;
 using ApplicationLayer.Extensions;
 using ApplicationLayer.Helpers;
 using DomainLayer.Enums;
+using InfrastructureLayer.Loggers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,11 +14,10 @@ using System.Security.Claims;
 using System.Text;
 
 namespace InfrastructureLayer.Handlers.User;
-public class RefreshUserTokenHandler(UserManager<AppUser> userManager,
+public sealed class RefreshUserTokenHandler(UserManager<AppUser> userManager,
     JwtSecurityTokenHandler jwtSecurityTokenHandler,
     IConfiguration configuration) : IQueryHandler<RefreshUserTokenQuery, TokenResultDTO>
 {
-    private static readonly Logger ErrorLogger = LogManager.GetLogger("ErrorLogger");
     public async Task<TokenResultDTO> Handle(RefreshUserTokenQuery query, CancellationToken cancellationToken)
     {
         try
@@ -84,7 +84,7 @@ public class RefreshUserTokenHandler(UserManager<AppUser> userManager,
         }
         catch (Exception ex)
         {
-            ErrorLogger.Error(ex, ex.Message);
+            CustomLoggers.ErrorLogger.Error(ex, ex.Message);
             throw new Exception(ex.Message);
         }
     }

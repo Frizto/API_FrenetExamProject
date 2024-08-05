@@ -3,25 +3,22 @@ using ApplicationLayer.CQRS.User.Commands;
 using ApplicationLayer.DTOs;
 using ApplicationLayer.Extensions;
 using InfrastructureLayer.DataAccess;
+using InfrastructureLayer.Loggers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
 namespace InfrastructureLayer.Handlers.User;
-sealed class DeleteUserHandler(UserManager<AppUser> userManager,
+public sealed class DeleteUserHandler(UserManager<AppUser> userManager,
     AppDbContext appDbContext) : ICommandHandler<DeleteUserCommand, ServiceResponse>
 {
-
-    private static readonly Logger DeleteLogger = LogManager.GetLogger("DeleteLogger");
-    private static readonly Logger ErrorLogger = LogManager.GetLogger("ErrorLogger");
-
     public async Task<ServiceResponse> Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
         using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
         try
         {
             // 1. Find the user by Id.
-            var user = await userManager.FindByIdAsync(command.Id) 
+            var user = await userManager.FindByIdAsync(command.Id)
                 ?? throw new Exception("User not found");
 
             // 2. Delete the user.
@@ -49,10 +46,13 @@ sealed class DeleteUserHandler(UserManager<AppUser> userManager,
             await transaction.CommitAsync(cancellationToken);
 
             // 6. Create the Log.
-            using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
             {
-                ScopeContext.PushProperty("EntityId", user.Id);
-                DeleteLogger.Info("User Deleted Successfully");
+                using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+                {
+                    ScopeContext.PushProperty("EntityId", user.Id);
+                    CustomLoggers.DeleteLogger.Info("User Deleted Successfully");
+                }
             }
 
             return new ServiceResponse(true, "User Deleted Successfully", DateTime.UtcNow);
@@ -61,7 +61,10 @@ sealed class DeleteUserHandler(UserManager<AppUser> userManager,
         {
             // If an unexpected error occurs, roll back the transaction.
             transaction.Rollback();
-            ErrorLogger.Error(ex, ex.Message);
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                CustomLoggers.ErrorLogger.Error(ex, ex.Message);
+            }
             return new ServiceResponse(false, ex.Message, DateTime.UtcNow);
         }
     }

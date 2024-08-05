@@ -4,6 +4,7 @@ using ApplicationLayer.DTOs;
 using ApplicationLayer.Extensions;
 using DomainLayer.Enums;
 using InfrastructureLayer.DataAccess;
+using InfrastructureLayer.Loggers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog;
@@ -11,12 +12,9 @@ using System.Security.Claims;
 
 namespace InfrastructureLayer.Handlers.User;
 
-sealed class UpdateUserHandler(UserManager<AppUser> userManager,
+public sealed class UpdateUserHandler(UserManager<AppUser> userManager,
     AppDbContext appDbContext) : ICommandHandler<UpdateUserCommand, ServiceResponse>
 {
-    private static readonly Logger UpdateLogger = LogManager.GetLogger("UpdateLogger");
-    private static readonly Logger ErrorLogger = LogManager.GetLogger("ErrorLogger");
-
     public async Task<ServiceResponse> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
         using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
@@ -60,7 +58,7 @@ sealed class UpdateUserHandler(UserManager<AppUser> userManager,
 
             // 3. Update the client
             var client = await appDbContext.Clients
-                .FirstOrDefaultAsync(c => c.AspNetUserId == aspUser.Id, cancellationToken) 
+                .FirstOrDefaultAsync(c => c.AspNetUserId == aspUser.Id, cancellationToken)
                 ?? throw new Exception("Client not found");
             client.Name = command.Name;
             client.Email = command.Email;
@@ -77,19 +75,24 @@ sealed class UpdateUserHandler(UserManager<AppUser> userManager,
             await transaction.CommitAsync(cancellationToken);
 
             // Create the Log
-            using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
             {
-                ScopeContext.PushProperty("EntityId", aspUser.Id);
-                UpdateLogger.Info("User Updated Successfully");
+                using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+                {
+                    ScopeContext.PushProperty("EntityId", aspUser.Id);
+                    CustomLoggers.UpdateLogger.Info("User Updated Successfully");
+                }
             }
-
             return new ServiceResponse(true, "User Updated Successfully", DateTime.UtcNow);
         }
         catch (Exception ex)
         {
             // Roll back the transaction if an unexpected error occurs
             transaction.Rollback();
-            ErrorLogger.Error(ex, ex.Message);
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                CustomLoggers.ErrorLogger.Error(ex, ex.Message);
+            }
             return new ServiceResponse(false, ex.Message, DateTime.UtcNow);
         }
     }

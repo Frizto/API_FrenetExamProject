@@ -5,19 +5,16 @@ using ApplicationLayer.Extensions;
 using DomainLayer.Enums;
 using DomainLayer.Models;
 using InfrastructureLayer.DataAccess;
+using InfrastructureLayer.Loggers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using System.Security.Claims;
 
 namespace InfrastructureLayer.Handlers.User;
-sealed class CreateUserHandler(UserManager<AppUser> userManager,
+public sealed class CreateUserHandler(UserManager<AppUser> userManager,
     AppDbContext appDbContext) : ICommandHandler<CreateUserCommand, ServiceResponse>
 {
-    // 0. Create logger instances
-    private static readonly Logger CreateLogger = LogManager.GetLogger("CreateLogger");
-    private static readonly Logger ErrorLogger = LogManager.GetLogger("ErrorLogger");
-
     public async Task<ServiceResponse> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
         using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
@@ -48,7 +45,7 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
                 throw new Exception("Failed when creating the User Claims");
             }
 
-            // 2. Create the client for the Db user.
+            // 2. Create the client for the Db user.         
             var clientAddress = new Address
             {
                 Street = command.Address!.Street,
@@ -81,10 +78,13 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
             await transaction.CommitAsync(cancellationToken);
 
             // 4. Create the Log.
-            using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
             {
-                ScopeContext.PushProperty("EntityId", aspUser.Id);
-                CreateLogger.Info("User Created Successfully");
+                using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+                {
+                    ScopeContext.PushProperty("EntityId", aspUser.Id);
+                    CustomLoggers.CreateLogger.Info("User Created Successfully");
+                }
             }
 
             return new ServiceResponse(true, "User Created Successfully", DateTime.UtcNow);
@@ -93,7 +93,10 @@ sealed class CreateUserHandler(UserManager<AppUser> userManager,
         {
             // If an unexpected error occurs, roll back the transaction.
             transaction.Rollback();
-            ErrorLogger.Error(ex, ex.Message);
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                CustomLoggers.ErrorLogger.Error(ex, ex.Message);
+            }
             return new ServiceResponse(false, ex.Message, DateTime.UtcNow);
         }
     }

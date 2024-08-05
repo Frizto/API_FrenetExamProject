@@ -2,15 +2,12 @@ using ApplicationLayer.CQRS.Interfaces;
 using ApplicationLayer.CQRS.Shipment.Commands;
 using ApplicationLayer.DTOs;
 using InfrastructureLayer.DataAccess;
+using InfrastructureLayer.Loggers;
 using NLog;
 
 namespace InfrastructureLayer.Handlers.Shipment;
-sealed class DeleteShipmentHandler(AppDbContext appDbContext) : ICommandHandler<DeleteShipmentCommand, ServiceResponse>
+public sealed class DeleteShipmentHandler(AppDbContext appDbContext) : ICommandHandler<DeleteShipmentCommand, ServiceResponse>
 {
-    // 0. Create logger instances
-    private static readonly Logger DeleteLogger = LogManager.GetLogger("DeleteLogger");
-    private static readonly Logger ErrorLogger = LogManager.GetLogger("ErrorLogger");
-
     public async Task<ServiceResponse> Handle(DeleteShipmentCommand command, CancellationToken cancellationToken)
     {
         using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
@@ -40,10 +37,13 @@ sealed class DeleteShipmentHandler(AppDbContext appDbContext) : ICommandHandler<
             await transaction.CommitAsync(cancellationToken);
 
             // 4. Create the Log.
-            using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
             {
-                ScopeContext.PushProperty("EntityId", shipmentData.Id);
-                DeleteLogger.Info("Shipment Deleted Successfully");
+                using (ScopeContext.PushProperty("TransactionId", Guid.NewGuid().ToString()))
+                {
+                    ScopeContext.PushProperty("EntityId", shipmentData.Id);
+                    CustomLoggers.DeleteLogger.Info("Shipment Deleted Successfully");
+                }
             }
 
             return new ServiceResponse(true, "Shipment Deleted Successfully", DateTime.UtcNow);
@@ -51,7 +51,10 @@ sealed class DeleteShipmentHandler(AppDbContext appDbContext) : ICommandHandler<
         catch (Exception ex)
         {
             transaction.Rollback();
-            ErrorLogger.Error(ex, ex.Message);
+            if (appDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                CustomLoggers.ErrorLogger.Error(ex, ex.Message);
+            }
             return new ServiceResponse(false, ex.Message, DateTime.UtcNow);
         }
     }

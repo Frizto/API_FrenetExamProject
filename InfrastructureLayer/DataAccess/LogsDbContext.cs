@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InfrastructureLayer.DataAccess;
 
-public partial class LogsDbContext(DbContextOptions<LogsDbContext> options) : DbContext
+public class LogsDbContext(DbContextOptions<LogsDbContext> options) : DbContext(options)
 {
     public virtual DbSet<Nlog> Nlogs { get; set; }
 

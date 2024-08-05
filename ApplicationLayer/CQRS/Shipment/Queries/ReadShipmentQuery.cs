@@ -1,12 +1,5 @@
 ﻿namespace ApplicationLayer.CQRS.Shipment.Queries;
-public class ReadShipmentQuery
+public class ReadShipmentQuery(string? id)
 {
-    private string shipmentId;
-
-    public ReadShipmentQuery(string shipmentId)
-    {
-        this.shipmentId = shipmentId;
-    }
-
-    public string? Id { get; set; }
+    public string? Id { get; set; } = id;
 }

@@ -11,33 +11,33 @@ public sealed class ShipmentPricingHandler(HttpClient httpClient,
 {
     private static Dictionary<string, string> Ceps = new()
     {
-        { "Aracaju", "49000-000" },
-        { "Belem", "66000-000" },
-        { "Belo Horizonte", "30000-000" },
-        { "Boa Vista", "69300-000" },
-        { "Brasilia", "70000-000" },
-        { "Campo Grande", "79000-000" },
-        { "Cuiaba", "78000-000" },
-        { "Curitiba", "80000-000" },
-        { "Florianopolis", "88000-000" },
-        { "Fortaleza", "60000-000" },
-        { "Goiania", "74000-000" },
-        { "Joao Pessoa", "58000-000" },
-        { "Macapa", "68900-000" },
-        { "Maceio", "57000-000" },
-        { "Manaus", "69000-000" },
-        { "Natal", "59000-000" },
-        { "Palmas", "77000-000" },
-        { "Porto Alegre", "90000-000" },
-        { "Porto Velho", "76800-000" },
-        { "Recife", "50000-000" },
-        { "Rio Branco", "69900-000" },
-        { "Rio de Janeiro", "20000-000" },
-        { "Salvador", "40000-000" },
-        { "Sao Luis", "65000-000" },
-        { "Sao Paulo", "01000-000" },
-        { "Teresina", "64000-000" },
-        { "Vitoria", "29000-000" }
+        { "aracaju", "49010000" },
+        { "belem", "66010000" },
+        { "belo horizonte", "30140071" },
+        { "boa vista", "69301000" },
+        { "brasilia", "70040902" },
+        { "campo grande", "79002000" },
+        { "cuiaba", "78010000" },
+        { "curitiba", "80010000" },
+        { "florianopolis", "88010000" },
+        { "fortaleza", "60110000" },
+        { "goiania", "74003010" },
+        { "joao pessoa", "58010000" },
+        { "macapa", "68900073" },
+        { "maceio", "57010000" },
+        { "manaus", "69010000" },
+        { "natal", "59010000" },
+        { "palmas", "77001002" },
+        { "porto alegre", "90010000" },
+        { "porto velho", "76801000" },
+        { "recife", "50010000" },
+        { "rio branco", "69900000" },
+        { "rio de janeiro", "20010000" },
+        { "salvador", "40010000" },
+        { "sao luis", "65010000" },
+        { "sao paulo", "01001000" },
+        { "teresina", "64001000" },
+        { "vitoria", "29010000" }
     };
 
     public async Task<ShipmentPricingDTO> Handle(ShipmentPricingQuery command, CancellationToken cancellationToken)
@@ -71,17 +71,10 @@ public sealed class ShipmentPricingHandler(HttpClient httpClient,
             }
         }
 
-        requestBody = new
-        {
-            from = new { postal_code = query.FromPostalCode },
-            to = new { postal_code = query.ToPostalCode },
-            package = new { height = query.Height, width = query.Width, length = query.Length, weight = query.Weight }
-        };
-
         var jsonContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
 
         httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        httpClient.DefaultRequestHeaders.Add("Authorization", Environment.GetEnvironmentVariable("ASPNETCORE_FRENETEXAM_TOKEN_DEV"));
+        httpClient.DefaultRequestHeaders.Add("Authorization", Environment.GetEnvironmentVariable("ASPNETCORE_FRENETEXAM_EXTERNALTOKEN_DEV"));
 
         var response = await httpClient.PostAsync(requestUri, jsonContent);
 

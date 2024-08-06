@@ -11,7 +11,7 @@
 8. [License](#license)
 
 ## Introduction
-Welcome to the FRENET Exam project! This document provides a comprehensive guide to setting up and running the application. It includes instructions for setting up the database, configuring the environment, running the application, and more.
+- Welcome to the FRENET Exam project! This document provides a comprehensive guide to setting up and running the application. It includes instructions for setting up the database, configuring the environment, running the application, and more.
 
 ## Prerequisites
 Before you begin, ensure you have the following software and tools installed:
@@ -22,7 +22,7 @@ Before you begin, ensure you have the following software and tools installed:
 
 ## SQL Tables Setup
 ### Step 1: Create Database
-Run the necessary SQL scripts to create the database and tables, inside the 'Misc' folder you'll find several SQL Scripts execute them in this order:
+- Run the necessary SQL scripts to create the database and tables, inside the 'Misc' folder you'll find several SQL Scripts execute them in this order:
 
 ## FIRST DATABASE CLIENT DATA 
 - A. Run 'SQLQuery_AspNetUserIdentity_Tables' to generate the AspNetUser Tables, we're going to use it to user Auth.
@@ -34,7 +34,7 @@ Run the necessary SQL scripts to create the database and tables, inside the 'Mis
 - C. Run the respectives '_StoredProcedure' from each table, we're delegating the Db logic to itself to better work with NLog in code.
 
 ### Step 2: Seed Data
-Optionally, seed the database with initial data.
+- Optionally, seed the database with initial data.
 
 ## Environment Setup
 ### Step 1: Configure Environment Variables (Remove Quotation Marks)
@@ -51,14 +51,16 @@ Set the following environment variables in your development environment for JWT 
 - C. Name: 'JwtFEKey' Value: 'your-256-bit-secret' (ex: kXjXzP7sIFut4lFGhEW1ie238fnIxUxz)
 
 ## Running the Application
-Set the 'WebAPI' inside 'PresentationLayer.csproj' as your startup project, if you need to scaffolding something set your default project in the Project Manager window as InfrastructureLayer.csproj
+- Set the 'WebAPI' inside 'PresentationLayer.csproj' as your startup project, if you need to scaffolding something set your default project in the Project Manager window as InfrastructureLayer.csproj.
 
 ## Diagrams
 ![Architecture Diagram](Misc/CleanArchitectureDiagram.png)
-![Validation Diagram](Misc/ValidationDiagram)
+![Validation Diagram](Misc/ValidationDiagram.png)
 
 ## Testing
-The tests are located under xUnitTestLayer.csproj there are 8 tests, both Unit and Integration respecting the provided architecure, make sure you have opened the Test Window where you can Run tests or Debug them.
+- The tests are located under xUnitTestLayer.csproj there are 8 tests, both Unit and Integration respecting the provided architecure, make sure you have opened the Test Window where you can Run tests or Debug them.
+  
+![Tests Window](Misc/TestsSnap.png)
 
 ## License
-This project is personal and made as a technical exam and portfolio demonstration, as there is no license it falls under Default Licensing, retaining all rights to distribution or remixing, derivation or branching is not allowed, only showing and using by allowed profiles.
+- This project is personal and made as a technical exam and portfolio demonstration, as there is no license it falls under Default Licensing, retaining all rights to distribution or remixing, derivation or branching is not allowed, only showing and using by allowed profiles.

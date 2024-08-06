@@ -43,15 +43,15 @@ Before you begin, ensure you have the following software and tools installed:
 Set the following environment variables in your development environment for database/api connection:
 - A. Name: 'ASPNETCORE_FRENETEXAM_DEV' Value: 'YourDBConnectionString' 
 - B. Name: 'ASPNETCORE_FRENETEXAMLOGS_DEV' Value: 'YourLogsDBConnectionString'
-- C. Name: 'ASPNETCORE_FRENETEXAM_EXTERNALTOKEN_DEV' Value: 'YourExternalApiToken'
-- Obs: (This must be a valid MelhorEnvio API token: Create your Account > Painel > Integrações > Permissão de Acesso > Gerar Novo Token - shipping-calculate)
-(You need to restart Visual Studio to reload Enviromental Variables)
+- C. Name: 'ASPNETCORE_FRENETEXAM_EXTERNALTOKEN_DEV' Value: 'YourExternalApiToken' (This must be a valid MelhorEnvio API token)
+- Obs: : Link in the index > Create your Account > Painel > Integrações > Permissão de Acesso > Gerar Novo Token - select 'shipping-calculate')
 
 Set the following environment variables in your development environment for JWT Tokenization:
 - A. Name: 'JwtFEAudience' Value: 'https://localhost:7121/' (Or override in launchsettings with a valid local port)
 - B. Name: 'JwtFEIssuer' Value: 'https://localhost:7121/' (Or override in launchsettings with a valid local port)
 - C. Name: 'JwtFEKey' Value: 'your-256-bit-secret' (ex: kXjXzP7sIFut4lFGhEW1ie238fnIxUxz)
-
+- 
+### (You need to restart Visual Studio to reload Enviromental Variables)
 ## Running the Application
 - Set the 'WebAPI' inside 'PresentationLayer.csproj' as your startup project, if you need to scaffolding something set your default project in the Project Manager window as InfrastructureLayer.csproj.
 

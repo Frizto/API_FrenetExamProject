@@ -19,7 +19,7 @@ Before you begin, ensure you have the following software and tools installed:
 - [.NET 8 SDK](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 - [Visual Studio](https://visualstudio.microsoft.com/)
-- [MelhorEnvioAPIToken](https://www.melhorenvio.com.br)
+- [MelhorEnvioAPIToken](https://app.melhorenvio.com.br/integracoes/permissoes-de-acesso)
 
 ## SQL Tables Setup
 ### Step 1: Create Database
@@ -43,7 +43,7 @@ Before you begin, ensure you have the following software and tools installed:
 Set the following environment variables in your development environment for database/api connection:
 - A. Name: 'ASPNETCORE_FRENETEXAM_DEV' Value: 'YourDBConnectionString' 
 - B. Name: 'ASPNETCORE_FRENETEXAMLOGS_DEV' Value: 'YourLogsDBConnectionString'
-- C. Name: 'ASPNETCORE_FRENETEXAM_EXTERNALTOKEN_DEV' Value: 'YourExternalApiToken' (This must be a valid MelhorEnvio API token)
+- C. Name: 'ASPNETCORE_FRENETEXAM_EXTERNALTOKEN_DEV' Value: 'YourExternalApiToken' (This must be a valid MelhorEnvio API token Painel > Integrações > Permissão de Acesso > Gerar Novo Token - shipping-calculate)
 (You need to restart Visual Studio to reload Enviromental Variables)
 
 Set the following environment variables in your development environment for JWT Tokenization:

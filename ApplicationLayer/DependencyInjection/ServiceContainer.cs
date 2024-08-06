@@ -10,7 +10,7 @@ public static class ServiceContainer
         services.AddScoped<JwtSecurityTokenHandler>();
 
         // 1. Adds the repo services
-        //services.AddScoped<IClientService, ClientService>();
+        // We can register here the future services
         return services;
     }
 }

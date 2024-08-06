@@ -15,7 +15,7 @@ public sealed class UpdateShipmentHandler(AppDbContext appDbContext) : ICommandH
         {
             // 0a. Find the shipment data
             var shipmentData = await appDbContext.Shipments
-                .FindAsync(command.Id)
+                .FindAsync(command.Guid)
                 ?? throw new Exception("Shipment not found");
 
             // 0b. Check if the User is the owner of the shipment

@@ -1,5 +1,5 @@
 ﻿namespace ApplicationLayer.CQRS.Shipment.Queries;
-public class ReadShipmentQuery(string? id)
+public class ReadShipmentQuery
 {
-    public string? Id { get; set; } = id;
+    public string? Guid { get; set; }
 }

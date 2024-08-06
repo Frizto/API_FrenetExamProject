@@ -25,7 +25,7 @@ public class ShipmentController : ControllerBase
     /// <response code = "400" > Error: Bad Request!</response>
     /// <response code = "401" > Error: User is not authorized!</response>
     [HttpPost("create-shipment")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> CreateShipmentAsync(
         [FromServices] ICommandHandler<CreateShipmentCommand, ServiceResponse> handler,
@@ -45,7 +45,7 @@ public class ShipmentController : ControllerBase
     /// <response code = "400" > Error: Bad Request!</response>
     /// <response code = "401" > Error: User is not authorized!</response>
     [HttpPut("update-shipment")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> UpdateShipmentAsync(
         [FromServices] ICommandHandler<UpdateShipmentCommand, ServiceResponse> handler,
@@ -65,7 +65,7 @@ public class ShipmentController : ControllerBase
     /// <response code = "400" > Error: Bad Request!</response>
     /// <response code = "401" > Error: User is not authorized!</response>
     [HttpDelete("delete-shipment")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> DeleteShipmentAsync(
         [FromServices] ICommandHandler<DeleteShipmentCommand, ServiceResponse> handler,
@@ -77,7 +77,7 @@ public class ShipmentController : ControllerBase
     }
 
     /// <summary>
-    /// Gets all Shipment Orders or a specific one if {guid} OrderId is provided.
+    /// Gets all Shipment Orders or a specific one if {guid} ShipmentId is provided.
     /// </summary>
     /// <returns>All or one Shipment Order.</returns>
     /// <example></example>
@@ -89,7 +89,7 @@ public class ShipmentController : ControllerBase
     /// <response code = "400" > Error: Bad Request!</response>
     /// <response code = "401" > Error: User is not authorized!</response>
     [HttpGet("readall")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(ReadShipmentDTO), 200)]
     public async Task<IActionResult> ReadAllShipmentsAsync(
         [FromServices] IQueryHandler<ReadShipmentQuery, ReadShipmentDTO> handler,
@@ -111,7 +111,7 @@ public class ShipmentController : ControllerBase
     /// <response code = "400" > Error: Bad Request!</response>
     /// <response code = "401" > Error: User is not authorized!</response>
     [HttpPost("shipment-price")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(ShipmentPricingDTO), 200)]
     public async Task<IActionResult> ShipmentPrice(
             [FromServices] IQueryHandler<ShipmentPricingQuery, ShipmentPricingDTO> handler,

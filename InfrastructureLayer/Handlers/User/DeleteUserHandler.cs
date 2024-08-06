@@ -18,7 +18,7 @@ public sealed class DeleteUserHandler(UserManager<AppUser> userManager,
         try
         {
             // 1. Find the user by Id.
-            var user = await userManager.FindByIdAsync(command.Id)
+            var user = await userManager.FindByIdAsync(command.Guid)
                 ?? throw new Exception("User not found");
 
             // 2. Delete the user.
@@ -29,7 +29,7 @@ public sealed class DeleteUserHandler(UserManager<AppUser> userManager,
             }
 
             // 3. Delete the client associated with the user.
-            var client = await appDbContext.Clients.FirstOrDefaultAsync(c => c.AspNetUserId == command.Id, cancellationToken);
+            var client = await appDbContext.Clients.FirstOrDefaultAsync(c => c.AspNetUserId == command.Guid, cancellationToken);
             if (client != null)
             {
                 appDbContext.Clients.Remove(client);

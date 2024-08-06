@@ -7,7 +7,7 @@ using NLog.Web;
 using System.Reflection;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-logger.Debug("init main");
+logger.Debug("Init Main FrenetExam WebAPI");
 
 try
 {

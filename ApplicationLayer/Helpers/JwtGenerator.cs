@@ -11,7 +11,7 @@ public class JWTGenerator(IConfiguration configuration)
 {
     public async Task<string> GenerateJWTTokenAsync(AppUser user, string role)
     {
-        // Implementation of JWT token generation
+        // 0. Lets generate our JWT Token based on some credentials and provided key
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration[nameof(JwtTokenConfigEnum.JwtFEKey)]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         var userClaims = new[]

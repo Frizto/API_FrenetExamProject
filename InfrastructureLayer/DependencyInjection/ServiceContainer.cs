@@ -78,6 +78,7 @@ public static class ServiceContainer
             });
 
         // 5. Adds the CQRS services to the container
+        // It is possible to user reflection here to retrieve metadata easing this step
         // 5a. User Handlers
         services.AddScoped<ICommandHandler<CreateUserCommand, ServiceResponse>, CreateUserHandler>();
         services.AddScoped<ICommandHandler<UpdateUserCommand, ServiceResponse>, UpdateUserHandler>();

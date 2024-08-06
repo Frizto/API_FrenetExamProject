@@ -58,7 +58,7 @@ public sealed class ShipmentPricingHandler(HttpClient httpClient,
         ShipmentPricingQuery _query = query;
         if (query.ShipmentId is not null)
         {
-            var shipment = await readHandler.Handle(new ReadShipmentQuery(query.ShipmentId), cancellationToken);
+            var shipment = await readHandler.Handle(new ReadShipmentQuery() {Guid = query.ShipmentId}, cancellationToken);
             var result = GetPostalCodes(shipment.Origin, shipment.Destination);
             if (result is not null)
             {

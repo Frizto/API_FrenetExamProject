@@ -15,7 +15,7 @@ public sealed class DeleteShipmentHandler(AppDbContext appDbContext) : ICommandH
         {
             // 1a. Find the shipment data.
             var shipmentData = await appDbContext.Shipments
-                .FindAsync(command.Id)
+                .FindAsync(command.Guid)
                 ?? throw new Exception("Shipment not found");
 
             // 1b. Check if the User is the owner of the shipment

@@ -44,6 +44,7 @@ public class UserController : ControllerBase
     /// <example>description</example>
     /// <response code = "200" > OK: Operation Success!</response>
     /// <response code = "400" > Error: Bad Request!</response>
+    /// <remarks>The Create operation can create an User based on role, 0: Admin - 1: Client</remarks>
     [HttpPost("create-user")]
     [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> CreateUserAsync(
@@ -63,6 +64,7 @@ public class UserController : ControllerBase
     /// <response code = "200" > OK: Operation Success!</response>
     /// <response code = "400" > Error: Bad Request!</response>
     /// <response code = "401" > Error: User is not authorized!</response>
+    /// <remarks>The Update operation is only allowed for the current logged user.</remarks>
     [HttpPut("update-user")]
     [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
     [ProducesResponseType(typeof(ServiceResponse), 200)]
@@ -76,15 +78,16 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a User with an valid {int} Id.
+    /// Delete a User with an valid {guid} Id.
     /// </summary>
     /// <returns>Delete the User based on a given Id.</returns>
     /// <example>description</example>
     /// <response code = "200" > OK: Operation Success!</response>
     /// <response code = "400" > Error: Bad Request!</response>
     /// <response code = "401" > Error: User is not authorized!</response>
+    /// <remarks>The Delete operation also removes the AspUser that is the reason to use a Guid.</remarks>
     [HttpDelete("delete-user")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(ServiceResponse), 200)]
     public async Task<IActionResult> DeleteUserAsync(
         [FromServices] ICommandHandler<DeleteUserCommand, ServiceResponse> handler,
@@ -108,7 +111,7 @@ public class UserController : ControllerBase
     /// <response code="400">Error: Bad Request!</response>
     /// <response code="401">Error: User is not authorized!</response>
     [HttpGet("readall")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(ReadUserDTO), 200)]
     public async Task<IActionResult> ReadAllUsersAsync(
         [FromServices] IQueryHandler<ReadUserQuery, ReadUserDTO> handler,
@@ -131,7 +134,7 @@ public class UserController : ControllerBase
     /// <response code="400">Error: Bad Request!</response>
     /// <response code="401">Error: User is not authorized!</response>
     [HttpPost("refresh-token")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client))]
+    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(TokenResultDTO), 200)]
     public async Task<IActionResult> RefreshUserTokenAsync(
         [FromServices] IQueryHandler<RefreshUserTokenQuery, TokenResultDTO> handler,

@@ -7,7 +7,8 @@ CREATE PROCEDURE [dbo].[NLog_UpdateEntry_p] (
   @logger nvarchar(300),
   @properties nvarchar(max),
   @exception nvarchar(max),
-  @transactionId nvarchar(50)
+  @transactionId nvarchar(50),
+  @entityId nvarchar(50)
 ) AS
 BEGIN
   UPDATE [dbo].[NLog]
@@ -19,8 +20,9 @@ BEGIN
     [Logger] = @logger,
     [Properties] = @properties,
     [Exception] = @exception,
-	[TransactionId] = @transactionId
-  WHERE [ID] = @id;
+	[TransactionId] = @transactionId,
+	[EntityId] = @entityId
+  WHERE [EntityId] = @entityId;
 
   INSERT INTO [dbo].[NLog_Update] (
     [OriginalID],
@@ -31,7 +33,8 @@ BEGIN
     [Logger],
     [Properties],
     [Exception],
-	[TransactionId]
+	[TransactionId],
+	[EntityId]
   ) VALUES (
     @id,
     @machineName,
@@ -41,6 +44,7 @@ BEGIN
     @logger,
     @properties,
     @exception,
-	@transactionId
+	@transactionId,
+	@entityId
   );
 END

@@ -8,11 +8,10 @@
 5. [Running the Application](#running-the-application)
 6. [Diagrams](#diagrams)
 7. [Testing](#testing)
-8. [Contributing](#contributing)
-9. [License](#license)
+8. [License](#license)
 
 ## Introduction
-Welcome to the project! This document provides a comprehensive guide to setting up and running the application. It includes instructions for setting up the database, configuring the environment, running the application, and more.
+Welcome to the FRENET Exam project! This document provides a comprehensive guide to setting up and running the application. It includes instructions for setting up the database, configuring the environment, running the application, and more.
 
 ## Prerequisites
 Before you begin, ensure you have the following software and tools installed:
@@ -55,4 +54,11 @@ Set the following environment variables in your development environment for JWT 
 Set the 'WebAPI' inside 'PresentationLayer.csproj' as your startup project, if you need to scaffolding something set your default project in the Project Manager window as InfrastructureLayer.csproj
 
 ## Diagrams
+![Architecture Diagram](Misc/CleanArchitectureDiagram.png)
+![Validation Diagram](Misc/ValidationDiagram)
 
+## Testing
+The tests are located under xUnitTestLayer.csproj there are 8 tests, both Unit and Integration respecting the provided architecure, make sure you have opened the Test Window where you can Run tests or Debug them.
+
+## License
+This project is personal and made as a technical exam and portfolio demonstration, as there is no license it falls under Default Licensing, retaining all rights to distribution or remixing, derivation or branching is not allowed, only showing and using by allowed profiles.

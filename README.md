@@ -43,7 +43,8 @@ Before you begin, ensure you have the following software and tools installed:
 Set the following environment variables in your development environment for database/api connection:
 - A. Name: 'ASPNETCORE_FRENETEXAM_DEV' Value: 'YourDBConnectionString' 
 - B. Name: 'ASPNETCORE_FRENETEXAMLOGS_DEV' Value: 'YourLogsDBConnectionString'
-- C. Name: 'ASPNETCORE_FRENETEXAM_EXTERNALTOKEN_DEV' Value: 'YourExternalApiToken' (This must be a valid MelhorEnvio API token Painel > Integrações > Permissão de Acesso > Gerar Novo Token - shipping-calculate)
+- C. Name: 'ASPNETCORE_FRENETEXAM_EXTERNALTOKEN_DEV' Value: 'YourExternalApiToken'
+- Obs: (This must be a valid MelhorEnvio API token: Create your Account > Painel > Integrações > Permissão de Acesso > Gerar Novo Token - shipping-calculate)
 (You need to restart Visual Studio to reload Enviromental Variables)
 
 Set the following environment variables in your development environment for JWT Tokenization:

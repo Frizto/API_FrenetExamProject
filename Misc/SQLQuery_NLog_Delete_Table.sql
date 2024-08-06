@@ -10,6 +10,7 @@ CREATE TABLE [dbo].[NLog_Delete] (
    [Exception] [nvarchar](max) NULL,
    [OperationTime] [datetime] NOT NULL DEFAULT GETDATE(),
    [TransactionId] [nvarchar](50) NOT NULL,
+   [EntityId] [nvarchar](50) NOT NULL,
  CONSTRAINT [PK_dbo_NLog_Delete] PRIMARY KEY CLUSTERED ([ID] ASC) 
    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];

@@ -6,7 +6,8 @@ CREATE PROCEDURE [dbo].[NLog_AddEntry_p] (
   @logger nvarchar(300),
   @properties nvarchar(max),
   @exception nvarchar(max),
-  @transactionId nvarchar(50)
+  @transactionId nvarchar(50),
+  @entityId nvarchar(50)
 ) AS
 BEGIN
   INSERT INTO [dbo].[NLog] (
@@ -16,7 +17,9 @@ BEGIN
     [Message],
     [Logger],
     [Properties],
-    [Exception]
+    [Exception],
+	[TransactionId],
+	[EntityId]
   ) VALUES (
     @machineName,
     @logged,
@@ -24,7 +27,9 @@ BEGIN
     @message,
     @logger,
     @properties,
-    @exception
+    @exception,
+	@transactionId,
+	@entityId
   );
 
   INSERT INTO [dbo].[NLog_Create] (
@@ -35,7 +40,8 @@ BEGIN
     [Logger],
     [Properties],
     [Exception],
-	[TransactionId]
+	[TransactionId],
+	[EntityId]
   ) VALUES (
     @machineName,
     @logged,
@@ -44,7 +50,8 @@ BEGIN
     @logger,
     @properties,
     @exception,
-	@transactionId
+	@transactionId,
+	@entityId
   );
 END
 

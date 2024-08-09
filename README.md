@@ -26,7 +26,7 @@ Before you begin, ensure you have the following software and tools installed:
 - Run the necessary SQL scripts to create the database and tables, inside the 'Misc' folder you'll find several SQL Scripts execute them in this order:
 
 ## FIRST DATABASE CLIENT DATA 
-- A. Run 'SQLQuery_AspNetUserIdentity_Tables' to generate the AspNetUser Tables, we're going to use it to user Auth.
+- A. Run 'SQLQuery_AspNetUserIdentity_Tables' to generate the AspNetUser Tables, we're going to use it for the user's Auth.
 - B. Run 'SQLQuery_Clients_Address_Shipments_Table' to generate the Clients/Addresses/Shipments Tables, we're going to use it to store clients data.
 
 ## SECOND DATABASE LOGS DATA
@@ -53,7 +53,7 @@ Set the following environment variables in your development environment for JWT 
 - 
 ### (You need to restart Visual Studio to reload Enviromental Variables)
 ## Running the Application
-- Set the 'WebAPI' inside 'PresentationLayer.csproj' as your startup project, if you need to scaffolding something set your default project in the Project Manager window as InfrastructureLayer.csproj.
+- Set the 'WebAPI' inside 'PresentationLayer.csproj' as your startup project, if you need to scaffolding something set your startup and default project in the Project Manager window as InfrastructureLayer.csproj.
 
 ## Diagrams
 ![Architecture Diagram](Misc/CleanArchitectureDiagram.png)
@@ -240,4 +240,4 @@ Set the following environment variables in your development environment for JWT 
    - D) Um protocolo de comunicação
 
 ## License
-- This project is personal and made as a technical exam and portfolio demonstration, as there is no license it falls under Default Licensing, retaining all rights to distribution or remixing, derivation or branching is not allowed, only showing and using by allowed profiles.
+- This project is personal and made as a technical exam and portfolio demonstration, as there is no license it falls under Default Licensing, retaining all rights to distribution or remixing, derivation or branching is not allowed, only displaying and using by allowed profiles in this platform.

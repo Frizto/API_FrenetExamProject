@@ -17,7 +17,7 @@ public sealed class CreateUserHandler(UserManager<AppUser> userManager,
 {
     public async Task<ServiceResponse> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
-        using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
+        using (var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken));
         try
         {
             // 1. Create the AspNetUser for credentials.

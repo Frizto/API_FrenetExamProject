@@ -14,7 +14,7 @@ public sealed class DeleteUserHandler(UserManager<AppUser> userManager,
 {
     public async Task<ServiceResponse> Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
-        using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
+        using (var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken));
         try
         {
             // 1. Find the user by Id.

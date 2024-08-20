@@ -7,24 +7,36 @@
 
 <h3>Users Data</h3>
 
-<button @onclick="LoadUser">Load User</button>
-
-@if (usersList != null)
+@if (usersList == null)
 {
-    <ul>
-        @foreach (var user in usersList)
-        {
-            <li>User ID: @user.Id</li>
-            <li>Email: @user.Email</li>
-        }
-    </ul>
+    <p>Loading...</p>
+} else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in usersList)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
 }
 
 @code {
     public ReadUserQuery userQuery = new ReadUserQuery();
-    public IEnumerable<ReadUserDTO>? usersList;
+    IEnumerable<ReadUserDTO>? usersList;
 
-    private async Task LoadUser()
+    protected override async Task OnInitializedAsync()
     {
         usersList = await UserAPIService.API_ReadAllUsers(userQuery);
     }

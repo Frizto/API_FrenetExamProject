@@ -17,7 +17,7 @@ public sealed class UpdateUserHandler(UserManager<AppUser> userManager,
 {
     public async Task<ServiceResponse> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
-        using (var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken));
+        using var transaction = await appDbContext.Database.BeginTransactionAsync(cancellationToken);
         try
         {
             // 0. Find the AspNetUser

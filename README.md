@@ -13,6 +13,7 @@
 
 ## Introduction
 - Welcome to the FRENET Exam project! This document provides a comprehensive guide to setting up and running the application. It includes instructions for setting up the database, configuring the environment, running the application, and more.
+- This project is an Tech Project API made with clean architerure, Mediator and CQRS patterns, it has Unit/Integration tests, auto generated documentation, external API requests, identity system with JWT token auth etc... 
 
 ## Prerequisites
 Before you begin, ensure you have the following software and tools installed:

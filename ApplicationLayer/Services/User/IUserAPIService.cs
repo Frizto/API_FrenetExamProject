@@ -11,5 +11,5 @@ public interface IUserAPIService
     Task<ServiceResponse> API_UpdateUserAsync(UpdateUserCommand command);
     Task<ServiceResponse> API_DeleteUserAsync(DeleteUserCommand command);
 
-    Task<IEnumerable<ReadUserDTO>> API_ReadAllUsers(ReadUserQuery query);
+    Task<List<ReadUserDTO>> API_ReadAllUsers(ReadUserQuery query);
 }

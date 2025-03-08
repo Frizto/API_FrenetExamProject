@@ -99,6 +99,7 @@ public sealed class CreateUserHandler(UserManager<AppUser> userManager,
             }
             return new ServiceResponse(false, ex.Message, DateTime.UtcNow);
         }
+
     }
 
     // 1b. Create the claims based on the user role.

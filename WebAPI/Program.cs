@@ -23,7 +23,16 @@ try
     
     // Register HttpClient
     builder.Services.AddHttpClient();
-
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAllOrigins",
+            builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+    });
     // Add API services to the container.
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
@@ -78,6 +87,7 @@ try
     // Add the HTTPS middleware to the pipeline.
     app.UseHttpsRedirection();
     app.UseRouting();
+    app.UseCors("AllowAllOrigins");
 
     // Add the Authentication middleware to the pipeline.
     app.UseAuthentication();

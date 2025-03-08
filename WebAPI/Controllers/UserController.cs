@@ -110,8 +110,8 @@ public class UserController : ControllerBase
     /// <response code="200">OK: Operation Success!</response>
     /// <response code="400">Error: Bad Request!</response>
     /// <response code="401">Error: User is not authorized!</response>
-    [HttpGet("readall-users")]
-    [Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
+    [HttpPost("readall-users")]
+    //[Authorize(Roles = nameof(AppUserTypeEnum.Client) + "," + nameof(AppUserTypeEnum.Admin))]
     [ProducesResponseType(typeof(ReadUserDTO), 200)]
     public async Task<IActionResult> ReadAllUsersAsync(
         [FromServices] IQueryHandler<ReadUserQuery, ReadUserDTO> handler,
